@@ -1,0 +1,21 @@
+{
+  "name": "hodic/nette-translation",
+  "description": "Translation extension for Nette",
+  "keywords": ["nette", "latte", "language", "translation", "database"],
+  "homepage": "https://github.com/karelhodic/nette-translation",
+  "license": ["MIT"],
+  "authors": [
+    {
+      "name": "Karel Hodic",
+      "homepage": "https://hodic.cz/"
+    }
+  ],
+  "require": {
+    "php": ">=7.0",
+    "nette/application": "~2.4",
+    "latte/latte": "~2.4"
+  },
+  "autoload": {
+    "classmap": ["src/"]
+  }
+}
