@@ -40,6 +40,9 @@ class Translator implements Nette\Localization\ITranslator
     /** @var TranslationPhraseModel */
     protected $translationPhrase;
     
+    /** @var array translation variables */
+    protected $variables;
+    
     public function __construct(
             LanguageModel $language,
             TranslateModel $translate,
@@ -48,6 +51,9 @@ class Translator implements Nette\Localization\ITranslator
         $this->language = $language;
         $this->translate = $translate;
         $this->translationPhrase = $translationPhrase;
+        
+        // initialization array in variables
+        $this->variables = [];
     }
 
     /**
@@ -60,7 +66,9 @@ class Translator implements Nette\Localization\ITranslator
      */
     public function translate($message, $count = null)
     {
-        return $this->getTranslation($message);
+        $text =  $this->getTranslation($message);
+        return $this->fillVariables($text);
+        
     }
     
     /**
@@ -113,5 +121,38 @@ class Translator implements Nette\Localization\ITranslator
         }
         
         return $translate->translation;
+    }
+    
+    /**
+     * Adds new variable for translation
+     * 
+     * @param string $key Name of variable
+     * @param string $value
+     * 
+     * @throws Hodic\Exception\Translation
+     */
+    public function addVariable(string $key, string $value)
+    {
+        if (isset($this->variables[$key]))
+        {
+            throw new Exception\NetteTranslation("Duplicate {$key} variable");
+        }
+        
+        $this->variables[$key] = $value;
+    }
+    
+    /**
+     * Fills all variables
+     * 
+     * @param string $text
+     */
+    protected function fillVariables(string $text)
+    {
+        foreach ($this->variables as $key => $variable)
+        {
+            $text = str_replace('{' . $key . '}', $variable, $text);
+        }
+        
+        return $text;
     }
 }
